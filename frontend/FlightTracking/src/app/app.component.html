@@ -1,0 +1,27 @@
+<button (click)="create()">Create</button>
+<router-outlet></router-outlet>
+<table class="table-with-margin">
+  <thead>
+  <tr>
+    <td>Id</td>
+    <td>Departure Airport</td>
+    <td>Arrival Airport</td>
+    <td>Departure Time</td>
+    <td>Arrival Time</td>
+    <td>Flight Company</td>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let flight of flights" >
+    <td>{{flight.id}}</td>
+    <td>{{flight.departureAirport}}</td>
+    <td>{{flight.arrivalAirport}}</td>
+    <td>{{flight.departureTime}}</td>
+    <td>{{flight.arrivalTime}}</td>
+    <td>{{flight.flightCompany}}</td>
+    <td><button>Edit</button></td>
+  </tr>
+  </tbody>
+</table>
+
+

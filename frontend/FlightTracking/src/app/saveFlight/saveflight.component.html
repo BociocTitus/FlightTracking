@@ -1,0 +1,35 @@
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    Add a flight
+  </div>
+  <div class="panel-body">
+      <div class="form-group">
+        <label class="col-md-4">Departure Airport:</label>
+        <input type="text" class="form-control" name="departureAirport" [(ngModel)]="flight.departureAirport"/>
+      </div>
+      <div class="form-group">
+        <label class="col-md-4">Departure time:</label>
+        <input type="text" class="form-control" type="datetime-local" name="departureTime"
+               [(ngModel)]="flight.departureTime"/>
+      </div>
+      <div class="form-group">
+        <label class="col-md-4">Arrival Airport:</label>
+        <input type="text" class="form-control" name="arrivalAirport"
+               [(ngModel)]="flight.arrivalAirport"/>
+      </div>
+      <div class="form-group">
+        <label class="col-md-4">Arrival time:</label>
+        <input type="text" class="form-control" type="datetime-local" name="departureTime"
+               [(ngModel)]="flight.arrivalTime"/>
+      </div>
+      <div class="form-group">
+        <label>Flight Company:</label>
+        <select placeholder="Flight Company" name="flightCompany" [(ngModel)]="flight.flightCompany">
+          <option *ngFor="let category of categories" [value]="category">
+            {{category}}
+          </option>
+        </select>
+      </div>
+      <button (click)="save()">Add</button>
+  </div>
+</div>
