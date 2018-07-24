@@ -1,10 +1,11 @@
 package service;
 
 import java.util.List;
+import java.util.Optional;
 
-import javax.ejb.EJB;
-import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
+
 import org.jboss.logging.Logger;
 
 import data.FlightManager;
@@ -17,7 +18,7 @@ public class FlightService implements IService<Flight, Long> {
 
 	private final Logger LOGGER = Logger.getLogger(this.getClass().getName());
 
-	@EJB
+	@Inject
 	private FlightManager flightManager;
 
 	@Override
@@ -61,10 +62,10 @@ public class FlightService implements IService<Flight, Long> {
 	}
 
 	@Override
-	public Flight findById(Long id) {
+	public Optional<Flight> findById(Long id) {
 		LOGGER.info("findById called:" + id);
 
-		Flight flight = flightManager.getById(id);
+		Optional<Flight> flight = Optional.ofNullable(flightManager.getById(id));
 		
 		LOGGER.info("findById result:" + flight);
 		return flight;

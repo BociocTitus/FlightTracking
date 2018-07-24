@@ -2,6 +2,7 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Flight} from '../domain/Flight';
 import {Observable} from 'rxjs';
+import {FlightFilter} from '../domain/FlightFilter';
 
 export interface HttpOptions {
   headers;
@@ -17,7 +18,7 @@ export class FlightService {
 
   addFlight(flight: Flight): Observable<any> {
     console.log(JSON.stringify(flight));
-    return this.http.post(this.URL, JSON.stringify(flight) , this.makeOptions());
+    return this.http.post(this.URL, JSON.stringify(flight), this.makeOptions());
   }
 
   getFlights(): Observable<any> {
@@ -29,11 +30,16 @@ export class FlightService {
   }
 
   updateFlight(flight: Flight) {
-    return this.http.put(this.URL, this.makeOptions());
+    return this.http.put(this.URL, JSON.stringify(flight), this.makeOptions());
   }
 
   deleteFlight(id: number) {
     return this.http.delete(this.URL + '/' + id, this.makeOptions());
+  }
+
+  searchFlights(flightFilter: FlightFilter): Observable<any> {
+    console.log(flightFilter);
+    return this.http.post(this.URL + '/filterByDeparture', JSON.stringify(flightFilter), this.makeOptions());
   }
 
   getHeaders(): HttpHeaders {

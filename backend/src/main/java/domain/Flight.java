@@ -1,8 +1,8 @@
 package domain;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
 import javax.persistence.Table;
@@ -13,6 +13,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import util.LocalDateTimeConverter;
 
 @Data
 @RequiredArgsConstructor
@@ -23,7 +24,9 @@ import lombok.ToString;
 @Entity
 @Table(name = "flights")
 public class Flight extends BaseEntity<Long> {
+	@Convert(converter = LocalDateTimeConverter.class)
 	private LocalDateTime arrivalTime;
+	@Convert(converter = LocalDateTimeConverter.class)
 	private LocalDateTime departureTime;
 	private String departureAirport;
 	private String arrivalAirport;

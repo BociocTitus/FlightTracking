@@ -10,16 +10,14 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.ejb.LocalBean;
-import javax.ejb.Stateless;
+import javax.enterprise.context.ApplicationScoped;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
-@LocalBean
-@Stateless
+@ApplicationScoped
 public class FlightManager {
 	private static SessionFactory factory;
 
@@ -102,15 +100,23 @@ public class FlightManager {
 			tx = session.beginTransaction();
 			List<Object[]> res = session.createSQLQuery("SELECT * from flights").list();
 			res.forEach(flightObject -> {
-				Flight flight = Flight.builder().arrivalAirport((String) flightObject[1])
-						.departureAirport((String) flightObject[3])
-						.flightCompany(FlightCompany.convertFromDatabase((int) flightObject[5]))
-						.departureTime(((Timestamp) flightObject[4]).toLocalDateTime())
-						.arrivalTime(((Timestamp) flightObject[2]).toLocalDateTime()).build();
+				try {
+					Flight flight = Flight.builder()
+							.arrivalAirport((String) flightObject[1])
+							.departureAirport((String) flightObject[3])
+							.flightCompany(FlightCompany.convertFromDatabase((int) flightObject[5]))
+							.departureTime(((Timestamp) flightObject[4]).toLocalDateTime())
+							.arrivalTime(((Timestamp) flightObject[2]).toLocalDateTime())
+							.build();
+					flight.setId(((BigInteger) flightObject[0]).longValue());
 
-				flight.setId(((BigInteger) flightObject[0]).longValue());
-
-				flights.add(flight);
+					flights.add(flight);
+				} catch (ClassCastException e) {
+					e.printStackTrace();
+					for (int i = 0; i < 6; i++) {
+						System.out.println(flightObject[i]);
+					}
+				}
 			});
 			tx.commit();
 			return flights;
@@ -142,7 +148,7 @@ public class FlightManager {
 		} finally {
 			session.close();
 		}
-		
+
 		return flight;
 	}
 }

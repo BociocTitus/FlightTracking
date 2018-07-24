@@ -1,8 +1,8 @@
 package converter;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import org.jboss.logging.Logger;
 
@@ -13,26 +13,23 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @Stateless
+@EJB(name = "FlightConverter", beanName = "FlightConverter", beanInterface = BaseConverter.class)
 public class FlightConverter implements BaseConverter<Flight, FlightDto> {
 
 	private static final Logger LOGGER = Logger.getLogger(FlightConverter.class.getName());
+	
+	@EJB(beanName = "DateTimeConverter")
+	private BaseConverter<LocalDateTime, String> dateConverter;
 
 	@Override
 	public FlightDto convertToDto(Flight flight) {
 		LOGGER.info("convertToDto called:" + flight);
 
-		 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-
-	     String flightStart = flight.getDepartureTime().format(formatter);
-	     String flightEnd = flight.getArrivalTime().format(formatter);
-		
-		FlightDto flightDto = FlightDto
-				.builder()
+		FlightDto flightDto = FlightDto.builder()
 				.departureAirport(flight.getDepartureAirport())
-				.arrivalAirport(flight.getArrivalAirport())
-				.flightCompany(flight.getFlightCompany().toString())
-				.arrivalTime(flightEnd)
-				.departureTime(flightStart)
+				.arrivalAirport(flight.getArrivalAirport()).flightCompany(flight.getFlightCompany().toString())
+				.arrivalTime(dateConverter.convertToDto(flight.getArrivalTime()))
+				.departureTime(dateConverter.convertToDto(flight.getDepartureTime()))
 				.build();
 		flightDto.setId(flight.getId());
 
@@ -45,16 +42,11 @@ public class FlightConverter implements BaseConverter<Flight, FlightDto> {
 	public Flight convertFromDto(FlightDto flightDto) {
 		LOGGER.info("convertFromDto called:" + flightDto);
 
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-
-        LocalDateTime flightStart = LocalDateTime.parse(flightDto.getArrivalTime(), formatter);
-        LocalDateTime flightEnd = LocalDateTime.parse(flightDto.getDepartureTime(), formatter);
-		
 		Flight flight = Flight.builder()
 				.arrivalAirport(flightDto.getArrivalAirport())
 				.departureAirport(flightDto.getDepartureAirport())
-				.arrivalTime(flightStart)
-				.departureTime(flightEnd)
+				.arrivalTime(dateConverter.convertFromDto(flightDto.getArrivalTime()))
+				.departureTime(dateConverter.convertFromDto(flightDto.getDepartureTime()))
 				.flightCompany(FlightCompany.valueOf(flightDto.getFlightCompany()))
 				.build();
 		flight.setId(flightDto.getId());

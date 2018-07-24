@@ -1,8 +1,10 @@
 package service;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.ejb.Local;
+
 
 
 @Local
@@ -15,5 +17,5 @@ public interface IService<T, E> {
 	
 	List<T> getElements();
 	
-	T findById(E id);
+	Optional<T> findById(E id);
 }

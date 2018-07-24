@@ -1,5 +1,53 @@
-<button (click)="create()">Create</button>
-<router-outlet></router-outlet>
+
+<button (click)="create()">New</button>
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    Add a flight
+  </div>
+  <div class="panel-body">
+    <div class="form-group">
+      <label class="col-md-4">Departure Airport:</label>
+      <input type="text" class="form-control" name="departureAirport"
+             [(ngModel)]="flight.departureAirport"/>
+    </div>
+    <div class="form-group">
+      <label class="col-md-4">Departure time:</label>
+      <input class="form-control" type="datetime-local" name="departureTime"
+             [(ngModel)]="flight.departureTime"/>
+    </div>
+    <div class="form-group">
+      <label class="col-md-4">Arrival Airport:</label>
+      <input type="text" class="form-control" name="arrivalAirport"
+             [(ngModel)]="flight.arrivalAirport"/>
+    </div>
+    <div class="form-group">
+      <label class="col-md-4">Arrival time:</label>
+      <input class="form-control" type="datetime-local" name="arrivalTime" value="{{flight.arrivalTime}}"
+             [(ngModel)]="flight.arrivalTime"/>
+    </div>
+    <div class="form-group">
+      <label>Flight Company:</label>
+      <select [(ngModel)]="flight.flightCompany">
+        <option *ngFor="let category of categories" [value]="category">
+          {{category}}
+        </option>
+      </select>
+    </div>
+    <button (click)="save()">Add</button>
+  </div>
+</div>
+
+<div class="middle-div">
+  <label>Start time:</label>
+  <input type="text" class="form-control" type="datetime-local" name="arrivalTime"
+         [(ngModel)]="flightFilter.startTime"/>
+  <br>
+  <label>End time:</label>
+  <input type="text" class="form-control" type="datetime-local" name="arrivalTime"
+         [(ngModel)]="flightFilter.endTime"/>
+  <br>
+  <button (click)="search()">Search</button>
+</div>
 <table class="table-with-margin">
   <thead>
   <tr>
@@ -12,14 +60,19 @@
   </tr>
   </thead>
   <tbody>
-  <tr *ngFor="let flight of flights" >
+  <tr *ngFor="let flight of flights">
     <td>{{flight.id}}</td>
     <td>{{flight.departureAirport}}</td>
     <td>{{flight.arrivalAirport}}</td>
     <td>{{flight.departureTime}}</td>
     <td>{{flight.arrivalTime}}</td>
     <td>{{flight.flightCompany}}</td>
-    <td><button>Edit</button></td>
+    <td>
+      <button (click)="edit(flight.id)">Edit</button>
+    </td>
+    <td>
+      <button (click)="delete(flight.id)">Delete</button>
+    </td>
   </tr>
   </tbody>
 </table>
