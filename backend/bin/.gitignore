@@ -1,4 +1,12 @@
-/service/
-/rest/
+/META-INF/
+/Main.class
+/converter/
 /data/
 /domain/
+/dto/
+/postgresql-42.2.4.jar
+/rest/
+/service/
+/test-perssistence.xml
+/util/
+/web/
